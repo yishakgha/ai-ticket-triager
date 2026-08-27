@@ -1,0 +1,201 @@
+text,category,priority
+"Hello, I want to cancel my subscription and get a refund for this billing cycle. Thanks.",billing,medium
+"Hi, Two-factor authentication isn't sending me codes, I can't get in. Thanks.",account,high
+"To whom it may concern, I'm considering your product, can you tell me more about the enterprise plan? Let me know.",general_inquiry,low
+"Hello, Is there a mobile app available for iOS? Appreciate the help.",general_inquiry,low
+"Hello, Adding an undo button would really help prevent accidental deletions. Please advise.",feature_request,medium
+"Hello, Just wanted to say the onboarding experience was great, thank you!",general_inquiry,low
+Can you merge my two duplicate accounts into one? Let me know.,account,medium
+"To whom it may concern, Is there a public API and where can I find documentation? Please advise.",general_inquiry,low
+"Hi team, The export to PDF feature produces a corrupted file every time. Please advise.",technical,medium
+"To whom it may concern, The export to PDF feature produces a corrupted file every time.",technical,medium
+"Hi team, How do I add a new team member to my organization's account? Please advise.",account,low
+"To whom it may concern, I'm getting a 500 error when I try to log in, this is blocking my whole team. Thanks.",technical,urgent
+It would help to have customizable dashboard widgets.,feature_request,low
+I want to delete my account and all associated data permanently. Appreciate the help.,account,medium
+"I was charged twice for my subscription this month, please refund the duplicate charge.",billing,high
+"Quick question - I'm considering your product, can you tell me more about the enterprise plan?",general_inquiry,low
+"To whom it may concern, Search results are not returning any results even for common queries. Thanks.",technical,high
+"Hi, Search results are not returning any results even for common queries. Appreciate the help.",technical,high
+The app crashes every time I try to upload a file larger than 10MB. Please advise.,technical,high
+"Hi, My invoice shows the wrong amount, can you correct it? Please advise.",billing,medium
+Adding an undo button would really help prevent accidental deletions. Appreciate the help.,feature_request,medium
+"To whom it may concern, The mobile app keeps logging me out every few minutes. Thanks.",technical,medium
+"Hi team, The mobile app keeps logging me out every few minutes.",technical,medium
+"Quick question - The dashboard is loading very slowly today, taking over 30 seconds. Appreciate the help.",technical,medium
+Quick question - It would help to have customizable dashboard widgets. Please advise.,feature_request,low
+Adding an undo button would really help prevent accidental deletions. Thanks.,feature_request,medium
+I need to transfer account ownership to a colleague. Thanks.,account,medium
+"To whom it may concern, Two-factor authentication isn't sending me codes, I can't get in. Let me know.",account,high
+"Hello, I need a receipt for my last three payments for tax purposes. Let me know.",billing,low
+"Hi, It would help to have customizable dashboard widgets. Please advise.",feature_request,low
+"Hello, I want to cancel my subscription and get a refund for this billing cycle. Please advise.",billing,medium
+What regions do you currently support for data hosting? Let me know.,general_inquiry,low
+"Hello, Two-factor authentication isn't sending me codes, I can't get in.",account,high
+"Hi team, How do I add a new team member to my organization's account? Please advise.",account,low
+"To whom it may concern, Notifications aren't showing up even though they're enabled in settings. Thanks.",technical,low
+"Hi team, Please add single sign-on (SSO) support for enterprise customers. Please advise.",feature_request,medium
+Quick question - We'd love a bulk-edit feature for managing many records at once. Please advise.,feature_request,medium
+Could you add keyboard shortcuts for common actions?,feature_request,low
+Quick question - Can you explain what this extra charge on my bill is for? Let me know.,billing,low
+"Hello, I'm getting a 500 error when I try to log in, this is blocking my whole team. Appreciate the help.",technical,urgent
+I need to transfer account ownership to a colleague. Appreciate the help.,account,medium
+"To whom it may concern, Adding an undo button would really help prevent accidental deletions. Thanks.",feature_request,medium
+Is there a public API and where can I find documentation? Appreciate the help.,general_inquiry,low
+"Hello, I need to transfer account ownership to a colleague. Appreciate the help.",account,medium
+"To whom it may concern, My invoice shows the wrong amount, can you correct it? Please advise.",billing,medium
+"Hi, The export to PDF feature produces a corrupted file every time.",technical,medium
+"Hi team, My invoice shows the wrong amount, can you correct it? Let me know.",billing,medium
+"Hi team, Just wanted to say the onboarding experience was great, thank you! Please advise.",general_inquiry,low
+"Hello, How do I update my credit card on file? Thanks.",billing,low
+"Hi team, Could you add keyboard shortcuts for common actions? Let me know.",feature_request,low
+"Hello, Search results are not returning any results even for common queries. Appreciate the help.",technical,high
+"To whom it may concern, There's a small UI glitch where the button text overlaps on mobile. Appreciate the help.",technical,low
+"Quick question - URGENT: I was billed $500 instead of $50, this needs to be fixed immediately. Let me know.",billing,urgent
+Quick question - Could you add keyboard shortcuts for common actions?,feature_request,low
+"Hi team, I can't reset my password, the reset email never arrives. Thanks.",technical,high
+Quick question - I'd like to switch from monthly to annual billing. Please advise.,billing,low
+"Hi, How do I add a new team member to my organization's account? Please advise.",account,low
+I suspect someone else has accessed my account without permission.,account,urgent
+I'm locked out of my account and need help verifying my identity. Appreciate the help.,account,high
+"Hi, Is there a mobile app available for iOS? Let me know.",general_inquiry,low
+"To whom it may concern, My invoice shows the wrong amount, can you correct it? Thanks.",billing,medium
+"To whom it may concern, API requests are returning 429 rate limit errors constantly, blocking production. Appreciate the help.",technical,urgent
+"My invoice shows the wrong amount, can you correct it? Please advise.",billing,medium
+"Quick question - The dashboard is loading very slowly today, taking over 30 seconds. Appreciate the help.",technical,medium
+"To whom it may concern, The export to PDF feature produces a corrupted file every time. Appreciate the help.",technical,medium
+"Hi, Requesting support for multi-language interfaces. Let me know.",feature_request,low
+Quick question - Do you offer discounts for non-profit organizations? Please advise.,general_inquiry,low
+"Hi team, Requesting support for multi-language interfaces. Please advise.",feature_request,low
+"Hi team, I'm getting a 500 error when I try to log in, this is blocking my whole team. Thanks.",technical,urgent
+"Hi, I need to change the email address associated with my account. Let me know.",account,low
+Quick question - I need to transfer account ownership to a colleague. Let me know.,account,medium
+"Quick question - Just wanted to say the onboarding experience was great, thank you! Please advise.",general_inquiry,low
+"Quick question - I'm considering your product, can you tell me more about the enterprise plan? Let me know.",general_inquiry,low
+"Hello, Could you add keyboard shortcuts for common actions?",feature_request,low
+I need to transfer account ownership to a colleague. Let me know.,account,medium
+"Hello, I need a receipt for my last three payments for tax purposes.",billing,low
+"Hi, Do you offer discounts for non-profit organizations? Appreciate the help.",general_inquiry,low
+"Hi, The dashboard is loading very slowly today, taking over 30 seconds.",technical,medium
+"Hello, The export to PDF feature produces a corrupted file every time. Please advise.",technical,medium
+"Hello, What regions do you currently support for data hosting? Thanks.",general_inquiry,low
+"To whom it may concern, What's the difference between the pro and premium plans? Let me know.",general_inquiry,low
+"Quick question - Can you add the ability to export data to Excel, not just CSV? Let me know.",feature_request,low
+"I can't reset my password, the reset email never arrives. Let me know.",technical,high
+"Hi, My invoice shows the wrong amount, can you correct it?",billing,medium
+"Hi team, Just wanted to say the onboarding experience was great, thank you! Appreciate the help.",general_inquiry,low
+Is there a mobile app available for iOS? Appreciate the help.,general_inquiry,low
+Quick question - What are your customer support hours? Appreciate the help.,general_inquiry,low
+Please update the company name listed on my account profile.,account,low
+"To whom it may concern, Notifications aren't showing up even though they're enabled in settings. Appreciate the help.",technical,low
+"Hi team, Requesting support for multi-language interfaces. Thanks.",feature_request,low
+Quick question - The app crashes every time I try to upload a file larger than 10MB.,technical,high
+"To whom it may concern, What's the difference between the pro and premium plans? Please advise.",general_inquiry,low
+Please update the company name listed on my account profile.,account,low
+"Hi, Do you offer discounts for non-profit organizations? Thanks.",general_inquiry,low
+Quick question - The coupon code I used didn't apply the discount to my order. Thanks.,billing,medium
+"Quick question - I'm getting a 500 error when I try to log in, this is blocking my whole team.",technical,urgent
+"Hello, How do I update my credit card on file? Let me know.",billing,low
+"To whom it may concern, What regions do you currently support for data hosting? Let me know.",general_inquiry,low
+"To whom it may concern, What's the difference between the pro and premium plans? Thanks.",general_inquiry,low
+"To whom it may concern, What's the difference between the pro and premium plans? Appreciate the help.",general_inquiry,low
+Quick question - Can you explain what this extra charge on my bill is for? Please advise.,billing,low
+"Hello, Is there a mobile app available for iOS? Appreciate the help.",general_inquiry,low
+Search results are not returning any results even for common queries.,technical,high
+"Quick question - I'm considering your product, can you tell me more about the enterprise plan?",general_inquiry,low
+Quick question - Can you explain what this extra charge on my bill is for? Please advise.,billing,low
+"Hi team, I was charged twice for my subscription this month, please refund the duplicate charge.",billing,high
+"To whom it may concern, My invoice shows the wrong amount, can you correct it? Appreciate the help.",billing,medium
+"Hello, Please consider adding integration with Slack for notifications. Please advise.",feature_request,low
+"Hi, Is there a mobile app available for iOS? Appreciate the help.",general_inquiry,low
+Quick question - Can you merge my two duplicate accounts into one? Please advise.,account,medium
+We'd love a bulk-edit feature for managing many records at once. Thanks.,feature_request,medium
+"Hi team, My payment failed but I was still charged, please investigate. Appreciate the help.",billing,high
+It would be great if the app supported dark mode. Appreciate the help.,feature_request,low
+"Hi, I want to cancel my subscription and get a refund for this billing cycle. Appreciate the help.",billing,medium
+Notifications aren't showing up even though they're enabled in settings. Appreciate the help.,technical,low
+"Hello, Can you add the ability to export data to Excel, not just CSV? Let me know.",feature_request,low
+Requesting support for multi-language interfaces.,feature_request,low
+Quick question - I need to transfer account ownership to a colleague. Let me know.,account,medium
+"Quick question - My invoice shows the wrong amount, can you correct it? Let me know.",billing,medium
+"Quick question - I'm considering your product, can you tell me more about the enterprise plan? Appreciate the help.",general_inquiry,low
+Quick question - I want to cancel my subscription and get a refund for this billing cycle. Appreciate the help.,billing,medium
+"Hello, Can you add the ability to export data to Excel, not just CSV? Please advise.",feature_request,low
+"Hi, Requesting support for multi-language interfaces. Thanks.",feature_request,low
+"To whom it may concern, The export to PDF feature produces a corrupted file every time. Thanks.",technical,medium
+"Hi, What regions do you currently support for data hosting? Appreciate the help.",general_inquiry,low
+Quick question - Please add single sign-on (SSO) support for enterprise customers. Let me know.,feature_request,medium
+"Hi team, Two-factor authentication isn't sending me codes, I can't get in. Thanks.",account,high
+"Hi team, Notifications aren't showing up even though they're enabled in settings.",technical,low
+Quick question - It would help to have customizable dashboard widgets. Appreciate the help.,feature_request,low
+"Hello, Requesting support for multi-language interfaces. Thanks.",feature_request,low
+Quick question - Please consider adding integration with Slack for notifications. Appreciate the help.,feature_request,low
+"Hi team, Please update the company name listed on my account profile. Let me know.",account,low
+"Hi, Is there a mobile app available for iOS? Let me know.",general_inquiry,low
+"My account was suspended without explanation, I need this resolved urgently. Thanks.",account,urgent
+"Hello, Can I get a demo of the product before purchasing? Appreciate the help.",general_inquiry,low
+"Hi, The mobile app keeps logging me out every few minutes. Please advise.",technical,medium
+"Hello, Can you explain what this extra charge on my bill is for?",billing,low
+"Hello, The export to PDF feature produces a corrupted file every time. Let me know.",technical,medium
+"Hi team, I'm locked out of my account and need help verifying my identity. Please advise.",account,high
+"Hi team, How do I update my credit card on file? Appreciate the help.",billing,low
+"To whom it may concern, I suspect someone else has accessed my account without permission. Please advise.",account,urgent
+"URGENT: I was billed $500 instead of $50, this needs to be fixed immediately. Thanks.",billing,urgent
+"Hi team, We'd love a bulk-edit feature for managing many records at once. Thanks.",feature_request,medium
+I need to change the email address associated with my account. Let me know.,account,low
+I need a receipt for my last three payments for tax purposes. Let me know.,billing,low
+"Quick question - Can you add the ability to export data to Excel, not just CSV? Thanks.",feature_request,low
+"Hi, How do I update my credit card on file? Please advise.",billing,low
+"Hi, What regions do you currently support for data hosting? Thanks.",general_inquiry,low
+The app crashes every time I try to upload a file larger than 10MB. Thanks.,technical,high
+"Hi team, I'm locked out of my account and need help verifying my identity.",account,high
+"Hello, Can you merge my two duplicate accounts into one? Appreciate the help.",account,medium
+"To whom it may concern, What are your customer support hours? Let me know.",general_inquiry,low
+Quick question - Can you explain what this extra charge on my bill is for? Let me know.,billing,low
+Could you add keyboard shortcuts for common actions?,feature_request,low
+"Hello, I want to delete my account and all associated data permanently. Appreciate the help.",account,medium
+"To whom it may concern, Can I get a demo of the product before purchasing? Appreciate the help.",general_inquiry,low
+"Hi, Please add single sign-on (SSO) support for enterprise customers. Please advise.",feature_request,medium
+"Hello, Please consider adding integration with Slack for notifications.",feature_request,low
+"Hello, Notifications aren't showing up even though they're enabled in settings. Appreciate the help.",technical,low
+"Hi, It would help to have customizable dashboard widgets. Let me know.",feature_request,low
+"Hi team, Adding an undo button would really help prevent accidental deletions.",feature_request,medium
+It would help to have customizable dashboard widgets. Please advise.,feature_request,low
+"Hello, What are your customer support hours? Please advise.",general_inquiry,low
+"Hi, What's the difference between the pro and premium plans? Let me know.",general_inquiry,low
+"To whom it may concern, Search results are not returning any results even for common queries. Thanks.",technical,high
+"Hi team, I want to delete my account and all associated data permanently. Appreciate the help.",account,medium
+"Hi team, Can you explain what this extra charge on my bill is for? Thanks.",billing,low
+Quick question - It would be great if the app supported dark mode. Let me know.,feature_request,low
+"Hi team, How do I add a new team member to my organization's account?",account,low
+"Hi team, Could you add keyboard shortcuts for common actions?",feature_request,low
+"Hi team, Can you explain what this extra charge on my bill is for? Let me know.",billing,low
+"Hi team, We'd love a bulk-edit feature for managing many records at once. Appreciate the help.",feature_request,medium
+Quick question - I need to change the email address associated with my account. Please advise.,account,low
+"To whom it may concern, I need to change the email address associated with my account.",account,low
+The export to PDF feature produces a corrupted file every time. Please advise.,technical,medium
+"URGENT: I was billed $500 instead of $50, this needs to be fixed immediately. Appreciate the help.",billing,urgent
+"Hi team, What's the difference between the pro and premium plans? Thanks.",general_inquiry,low
+"Hi team, How do I add a new team member to my organization's account? Appreciate the help.",account,low
+"Hi, I'm considering your product, can you tell me more about the enterprise plan? Let me know.",general_inquiry,low
+"Hi team, I want to delete my account and all associated data permanently. Let me know.",account,medium
+I suspect someone else has accessed my account without permission. Thanks.,account,urgent
+"To whom it may concern, I want to delete my account and all associated data permanently. Let me know.",account,medium
+The coupon code I used didn't apply the discount to my order. Appreciate the help.,billing,medium
+"Hello, The dashboard is loading very slowly today, taking over 30 seconds. Thanks.",technical,medium
+Do you have an affiliate or referral program? Thanks.,general_inquiry,low
+"To whom it may concern, My payment failed but I was still charged, please investigate. Appreciate the help.",billing,high
+"To whom it may concern, Is there a mobile app available for iOS? Appreciate the help.",general_inquiry,low
+Quick question - I suspect someone else has accessed my account without permission. Let me know.,account,urgent
+"To whom it may concern, Search results are not returning any results even for common queries.",technical,high
+"Hello, The coupon code I used didn't apply the discount to my order. Let me know.",billing,medium
+"Quick question - My payment failed but I was still charged, please investigate. Appreciate the help.",billing,high
+"Quick question - I was charged twice for my subscription this month, please refund the duplicate charge. Thanks.",billing,high
+"To whom it may concern, Please add single sign-on (SSO) support for enterprise customers. Thanks.",feature_request,medium
+"Hi, I need to transfer account ownership to a colleague.",account,medium
+"Hi team, Two-factor authentication isn't sending me codes, I can't get in. Appreciate the help.",account,high
+"Hello, I'm getting a 500 error when I try to log in, this is blocking my whole team.",technical,urgent
+"Quick question - I'm getting a 500 error when I try to log in, this is blocking my whole team. Appreciate the help.",technical,urgent
+Search results are not returning any results even for common queries.,technical,high
+"I'm considering your product, can you tell me more about the enterprise plan?",general_inquiry,low
+Quick question - Can you explain what this extra charge on my bill is for?,billing,low

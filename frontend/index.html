@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Support Ticket Triager</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --accent: #4f8cff;
+    --text: #e8eaed;
+    --muted: #9aa0a6;
+    --border: #2a2e37;
+    --low: #4caf50;
+    --medium: #ffb300;
+    --high: #ff7043;
+    --urgent: #e53935;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .container { width: 100%; max-width: 640px; }
+  h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    background: #0f1115;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.95rem;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .row { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+  select, button {
+    background: #0f1115;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+  button {
+    background: var(--accent);
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: auto;
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .result { margin-top: 8px; }
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .badge.category { background: #263043; color: #7fb2ff; }
+  .badge.low { background: rgba(76,175,80,0.15); color: var(--low); }
+  .badge.medium { background: rgba(255,179,0,0.15); color: var(--medium); }
+  .badge.high { background: rgba(255,112,67,0.15); color: var(--high); }
+  .badge.urgent { background: rgba(229,57,53,0.15); color: var(--urgent); }
+  .reasoning { margin-top: 12px; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+  .method-tag { color: var(--muted); font-size: 0.75rem; margin-top: 10px; }
+  .error { color: var(--urgent); font-size: 0.9rem; margin-top: 10px; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .example-chip {
+    background: #0f1115;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .example-chip:hover { border-color: var(--accent); color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎫 AI Support Ticket Triager</h1>
+  <p class="subtitle">Paste a support ticket below to get an AI-predicted category, priority, and reasoning.</p>
+
+  <div class="card">
+    <textarea id="ticketText" placeholder="e.g. I was charged twice for my subscription this month, please refund the duplicate charge."></textarea>
+
+    <div class="examples" id="examples"></div>
+
+    <div class="row">
+      <select id="method">
+        <option value="auto">Auto (LLM, fallback to baseline)</option>
+        <option value="llm">LLM only</option>
+        <option value="baseline">Baseline ML only</option>
+      </select>
+      <button id="submitBtn">Classify Ticket</button>
+    </div>
+  </div>
+
+  <div class="card result" id="resultCard" style="display:none;">
+    <div id="badges"></div>
+    <div class="reasoning" id="reasoning"></div>
+    <div class="method-tag" id="methodTag"></div>
+  </div>
+  <div class="error" id="errorMsg"></div>
+</div>
+
+<script>
+// Same-origin by default since Flask serves this file directly.
+const API_BASE = window.API_BASE_URL || "";
+
+const examples = [
+  "I was charged twice for my subscription this month, please refund the duplicate charge.",
+  "The app crashes every time I try to upload a file larger than 10MB.",
+  "I'm locked out of my account and need help verifying my identity.",
+  "It would be great if the app supported dark mode.",
+  "What are your customer support hours?"
+];
+
+const examplesDiv = document.getElementById("examples");
+examples.forEach(ex => {
+  const chip = document.createElement("div");
+  chip.className = "example-chip";
+  chip.textContent = ex.length > 45 ? ex.slice(0, 45) + "…" : ex;
+  chip.onclick = () => { document.getElementById("ticketText").value = ex; };
+  examplesDiv.appendChild(chip);
+});
+
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  const text = document.getElementById("ticketText").value.trim();
+  const method = document.getElementById("method").value;
+  const btn = document.getElementById("submitBtn");
+  const resultCard = document.getElementById("resultCard");
+  const errorMsg = document.getElementById("errorMsg");
+
+  errorMsg.textContent = "";
+  resultCard.style.display = "none";
+
+  if (!text) {
+    errorMsg.textContent = "Please enter some ticket text.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Classifying...";
+
+  try {
+    const resp = await fetch(`${API_BASE}/api/classify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, method })
+    });
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      errorMsg.textContent = data.error || "Something went wrong.";
+      return;
+    }
+
+    document.getElementById("badges").innerHTML = `
+      <span class="badge category">${data.category}</span>
+      <span class="badge ${data.priority}">${data.priority.toUpperCase()}</span>
+    `;
+    document.getElementById("reasoning").textContent = data.reasoning || "";
+    document.getElementById("methodTag").textContent = `Classified via: ${data.method}`;
+    resultCard.style.display = "block";
+  } catch (err) {
+    errorMsg.textContent = "Could not reach the API. Is the backend running?";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Classify Ticket";
+  }
+});
+</script>
+</body>
+</html>
