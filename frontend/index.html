@@ -28,9 +28,9 @@
     justify-content: center;
     padding: 40px 16px;
   }
-  .container { width: 100%; max-width: 640px; }
+  .container { width: 100%; max-width: 720px; }
   h1 { font-size: 1.6rem; margin-bottom: 4px; }
-  .subtitle { color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
+  .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -67,6 +67,12 @@
     cursor: pointer;
     margin-left: auto;
   }
+  button.secondary {
+    background: #0f1115;
+    color: var(--text);
+    border: 1px solid var(--border);
+    margin-left: 0;
+  }
   button:disabled { opacity: 0.6; cursor: not-allowed; }
   .result { margin-top: 8px; }
   .badge {
@@ -82,6 +88,7 @@
   .badge.medium { background: rgba(255,179,0,0.15); color: var(--medium); }
   .badge.high { background: rgba(255,112,67,0.15); color: var(--high); }
   .badge.urgent { background: rgba(229,57,53,0.15); color: var(--urgent); }
+  .confidence { color: var(--muted); font-size: 0.78rem; margin-left: 4px; }
   .reasoning { margin-top: 12px; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
   .method-tag { color: var(--muted); font-size: 0.75rem; margin-top: 10px; }
   .error { color: var(--urgent); font-size: 0.9rem; margin-top: 10px; }
@@ -96,40 +103,136 @@
     cursor: pointer;
   }
   .example-chip:hover { border-color: var(--accent); color: var(--text); }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; }
+  td.text-cell { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 8px; }
+  .stat-box {
+    background: #0f1115;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .stat-box .label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .stat-box .value { font-size: 1.4rem; font-weight: 700; margin-top: 4px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 0.82rem; }
+  .bar-label { width: 110px; color: var(--muted); flex-shrink: 0; }
+  .bar-track { flex: 1; background: #0f1115; border-radius: 4px; height: 10px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); }
+  .bar-count { width: 30px; text-align: right; color: var(--muted); flex-shrink: 0; }
+  .empty-state { color: var(--muted); font-size: 0.88rem; margin-top: 10px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🎫 AI Support Ticket Triager</h1>
-  <p class="subtitle">Paste a support ticket below to get an AI-predicted category, priority, and reasoning.</p>
+  <p class="subtitle">Paste a support ticket, upload a batch, or view classification analytics.</p>
 
-  <div class="card">
-    <textarea id="ticketText" placeholder="e.g. I was charged twice for my subscription this month, please refund the duplicate charge."></textarea>
+  <div class="tabs">
+    <div class="tab active" data-tab="single">Single Ticket</div>
+    <div class="tab" data-tab="batch">Batch Upload</div>
+    <div class="tab" data-tab="analytics">Analytics</div>
+  </div>
 
-    <div class="examples" id="examples"></div>
+  <!-- SINGLE TICKET TAB -->
+  <div class="tab-panel active" id="panel-single">
+    <div class="card">
+      <textarea id="ticketText" placeholder="e.g. I was charged twice for my subscription this month, please refund the duplicate charge."></textarea>
 
-    <div class="row">
-      <select id="method">
-        <option value="auto">Auto (LLM, fallback to baseline)</option>
-        <option value="llm">LLM only</option>
-        <option value="baseline">Baseline ML only</option>
-      </select>
-      <button id="submitBtn">Classify Ticket</button>
+      <div class="examples" id="examples"></div>
+
+      <div class="row">
+        <select id="method">
+          <option value="auto">Auto (LLM, fallback to baseline)</option>
+          <option value="llm">LLM only</option>
+          <option value="baseline">Baseline ML only</option>
+        </select>
+        <button id="submitBtn">Classify Ticket</button>
+      </div>
+    </div>
+
+    <div class="card result" id="resultCard" style="display:none;">
+      <div id="badges"></div>
+      <div class="reasoning" id="reasoning"></div>
+      <div class="method-tag" id="methodTag"></div>
+    </div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <!-- BATCH UPLOAD TAB -->
+  <div class="tab-panel" id="panel-batch">
+    <div class="card">
+      <p class="subtitle" style="margin-bottom:12px;">
+        Upload a CSV file with a <code>text</code> column, one ticket per row. Classified using the
+        baseline ML model (fast and free for bulk triage).
+      </p>
+      <div class="row" style="margin-top:0;">
+        <input type="file" id="csvFile" accept=".csv" style="color: var(--text);">
+        <button id="batchSubmitBtn">Upload &amp; Classify</button>
+      </div>
+    </div>
+
+    <div class="card" id="batchResultCard" style="display:none;">
+      <div class="row" style="margin-top:0;">
+        <span id="batchSummary"></span>
+        <button class="secondary" id="downloadCsvBtn">Download results (.csv)</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table id="batchTable">
+          <thead>
+            <tr><th>Text</th><th>Category</th><th>Priority</th><th>Confidence</th></tr>
+          </thead>
+          <tbody id="batchTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="error" id="batchErrorMsg"></div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div class="tab-panel" id="panel-analytics">
+    <div class="card">
+      <div class="row" style="margin-top:0;">
+        <span style="color: var(--muted); font-size:0.85rem;">Counts from this session's classifications.</span>
+        <button class="secondary" id="refreshAnalyticsBtn">Refresh</button>
+      </div>
+      <div id="analyticsContent"></div>
     </div>
   </div>
-
-  <div class="card result" id="resultCard" style="display:none;">
-    <div id="badges"></div>
-    <div class="reasoning" id="reasoning"></div>
-    <div class="method-tag" id="methodTag"></div>
-  </div>
-  <div class="error" id="errorMsg"></div>
 </div>
 
 <script>
 // Same-origin by default since Flask serves this file directly.
 const API_BASE = window.API_BASE_URL || "";
 
+// ---------- Tabs ----------
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(`panel-${tab.dataset.tab}`).classList.add("active");
+    if (tab.dataset.tab === "analytics") loadAnalytics();
+  });
+});
+
+// ---------- Single ticket ----------
 const examples = [
   "I was charged twice for my subscription this month, please refund the duplicate charge.",
   "The app crashes every time I try to upload a file larger than 10MB.",
@@ -178,9 +281,12 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
       return;
     }
 
+    const catConf = data.category_confidence != null ? ` <span class="confidence">(${Math.round(data.category_confidence * 100)}%)</span>` : "";
+    const priConf = data.priority_confidence != null ? ` <span class="confidence">(${Math.round(data.priority_confidence * 100)}%)</span>` : "";
+
     document.getElementById("badges").innerHTML = `
-      <span class="badge category">${data.category}</span>
-      <span class="badge ${data.priority}">${data.priority.toUpperCase()}</span>
+      <span class="badge category">${data.category}</span>${catConf}
+      <span class="badge ${data.priority}">${data.priority.toUpperCase()}</span>${priConf}
     `;
     document.getElementById("reasoning").textContent = data.reasoning || "";
     document.getElementById("methodTag").textContent = `Classified via: ${data.method}`;
@@ -192,6 +298,134 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     btn.textContent = "Classify Ticket";
   }
 });
+
+// ---------- Batch upload ----------
+let lastBatchResults = [];
+
+document.getElementById("batchSubmitBtn").addEventListener("click", async () => {
+  const fileInput = document.getElementById("csvFile");
+  const btn = document.getElementById("batchSubmitBtn");
+  const errorMsg = document.getElementById("batchErrorMsg");
+  const resultCard = document.getElementById("batchResultCard");
+
+  errorMsg.textContent = "";
+  resultCard.style.display = "none";
+
+  if (!fileInput.files.length) {
+    errorMsg.textContent = "Please choose a CSV file first.";
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  btn.disabled = true;
+  btn.textContent = "Classifying...";
+
+  try {
+    const resp = await fetch(`${API_BASE}/api/classify/batch`, { method: "POST", body: formData });
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      errorMsg.textContent = data.error || "Something went wrong.";
+      return;
+    }
+
+    lastBatchResults = data.results;
+    document.getElementById("batchSummary").textContent = `${data.count} tickets classified`;
+
+    const tbody = document.getElementById("batchTableBody");
+    tbody.innerHTML = data.results.map(r => {
+      if (r.error) {
+        return `<tr><td colspan="4" style="color:var(--muted);">${r.error}</td></tr>`;
+      }
+      const conf = r.category_confidence != null ? `${Math.round(r.category_confidence * 100)}%` : "—";
+      return `<tr>
+        <td class="text-cell" title="${escapeHtml(r.text)}">${escapeHtml(r.text)}</td>
+        <td><span class="badge category">${r.category}</span></td>
+        <td><span class="badge ${r.priority}">${r.priority.toUpperCase()}</span></td>
+        <td>${conf}</td>
+      </tr>`;
+    }).join("");
+
+    resultCard.style.display = "block";
+  } catch (err) {
+    errorMsg.textContent = "Could not reach the API. Is the backend running?";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Upload & Classify";
+  }
+});
+
+document.getElementById("downloadCsvBtn").addEventListener("click", () => {
+  if (!lastBatchResults.length) return;
+  const header = "text,category,priority,category_confidence,priority_confidence\n";
+  const rows = lastBatchResults
+    .filter(r => !r.error)
+    .map(r => [r.text, r.category, r.priority, r.category_confidence, r.priority_confidence]
+      .map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
+  const blob = new Blob([header + rows], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "classified_tickets.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ---------- Analytics ----------
+async function loadAnalytics() {
+  const content = document.getElementById("analyticsContent");
+  content.innerHTML = `<p class="empty-state">Loading...</p>`;
+  try {
+    const resp = await fetch(`${API_BASE}/api/analytics`);
+    const data = await resp.json();
+
+    if (data.total_classified === 0) {
+      content.innerHTML = `<p class="empty-state">No tickets classified yet this session. Try the Single Ticket or Batch Upload tabs first.</p>`;
+      return;
+    }
+
+    const statGrid = `
+      <div class="stat-grid">
+        <div class="stat-box"><div class="label">Total Classified</div><div class="value">${data.total_classified}</div></div>
+        <div class="stat-box"><div class="label">Via LLM</div><div class="value">${data.by_method.llm || 0}</div></div>
+        <div class="stat-box"><div class="label">Via Baseline</div><div class="value">${data.by_method.baseline || 0}</div></div>
+      </div>
+    `;
+
+    const categoryBars = renderBars("By Category", data.by_category, data.total_classified);
+    const priorityBars = renderBars("By Priority", data.by_priority, data.total_classified);
+
+    content.innerHTML = statGrid + categoryBars + priorityBars;
+  } catch (err) {
+    content.innerHTML = `<p class="error">Could not load analytics.</p>`;
+  }
+}
+
+function renderBars(title, counts, total) {
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const bars = entries.map(([label, count]) => {
+    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+    return `
+      <div class="bar-row">
+        <div class="bar-label">${label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;"></div></div>
+        <div class="bar-count">${count}</div>
+      </div>
+    `;
+  }).join("");
+  return `<h3 style="margin:18px 0 4px; font-size:0.95rem;">${title}</h3>${bars}`;
+}
+
+document.getElementById("refreshAnalyticsBtn").addEventListener("click", loadAnalytics);
 </script>
 </body>
 </html>

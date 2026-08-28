@@ -103,3 +103,50 @@ the submit button.
   before handling untrusted public traffic.
 - No persistence layer — ticket history/audit trail isn't stored, which
   would likely be a next feature for a real support team.
+
+## 8. Extended Features (beyond the minimum requirements)
+
+Three additional capabilities were built beyond the core single-ticket
+classification flow, to better demonstrate real-world triage tooling:
+
+**Confidence scores.** Every baseline classification now returns a
+`category_confidence` and `priority_confidence` (the model's max predicted
+probability), shown in the UI next to each badge. This gives an agent a
+signal for when to trust a prediction versus review it manually — a
+prediction at 35% confidence should be treated very differently from one at
+95%, even though both return the same label. (The LLM path does not return a
+numeric confidence score, since the underlying API does not expose one;
+this is a real, documented tradeoff between the two approaches rather than
+an oversight.)
+
+**Batch CSV upload.** A `/api/classify/batch` endpoint accepts a CSV file
+(with a `text` column) and classifies every row using the baseline model,
+returning results as JSON that the frontend renders as a table with a
+"download results" button. The LLM was deliberately excluded from the batch
+path: running potentially hundreds of rows through a paid, rate-limited API
+would be slow and costly, whereas the baseline model classifies a full batch
+in milliseconds at zero marginal cost. This is a concrete example of
+choosing the right AI approach for the job rather than defaulting to the
+most powerful one everywhere.
+
+**Session analytics.** A `/api/analytics` endpoint aggregates every
+classification made during the current server session (single or batch) and
+returns counts by category, priority, and method used. The frontend renders
+this as a simple bar-chart view. This is intentionally session-scoped and
+resets on server restart — a documented limitation rather than a persistence
+layer, since adding a database was out of scope for this project's timeline
+but would be the natural next step for a production version.
+
+## 9. A Real Debugging Story (production incident during development)
+
+During deployment testing, the live LLM classifier silently fell back to the
+baseline model on every request, with no visible error. Investigation (via
+added logging, see `main.py`) traced this to an `anthropic.BadRequestError`
+caused by an empty API credit balance on the Anthropic account used for
+testing — not a code defect. This incident is included here because it is a
+genuine validation of the system's graceful-degradation design: even under
+a real, unplanned failure of the LLM dependency, the API continued
+returning valid 200 responses to the frontend by falling back to the
+baseline model, exactly as designed in Section 3's "auto mode" strategy.
+Once credits were added, the LLM path was confirmed working end-to-end in
+production.

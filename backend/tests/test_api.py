@@ -2,6 +2,7 @@
 Test suite for the Ticket Triager API.
 Run from backend/: pytest tests/ -v
 """
+import io
 import os
 import sys
 import pytest
@@ -89,3 +90,54 @@ def test_classify_auto_falls_back_to_baseline_without_api_key(client, monkeypatc
     assert resp.status_code == 200
     body = resp.get_json()
     assert body["method"] == "baseline"
+
+
+def test_classify_baseline_includes_confidence_scores(client):
+    resp = client.post(
+        "/api/classify",
+        json={"text": "I was charged twice for my subscription, please refund me.", "method": "baseline"},
+    )
+    body = resp.get_json()
+    assert "category_confidence" in body
+    assert "priority_confidence" in body
+    assert 0.0 <= body["category_confidence"] <= 1.0
+    assert 0.0 <= body["priority_confidence"] <= 1.0
+
+
+def test_analytics_starts_reflecting_classifications(client):
+    client.post("/api/classify", json={"text": "The app crashes on upload.", "method": "baseline"})
+    resp = client.get("/api/analytics")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["total_classified"] >= 1
+    assert "by_category" in body
+    assert "by_priority" in body
+    assert "by_method" in body
+
+
+def test_batch_classify_valid_csv(client):
+    csv_content = "text\nI was charged twice for my subscription\nThe app crashes on upload\n"
+    data = {"file": (io.BytesIO(csv_content.encode()), "tickets.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["count"] == 2
+    assert len(body["results"]) == 2
+    assert all("category" in r for r in body["results"])
+
+
+def test_batch_classify_missing_text_column_returns_400(client):
+    data = {"file": (io.BytesIO(b"foo\nbar\n"), "bad.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 400
+
+
+def test_batch_classify_rejects_non_csv_file(client):
+    data = {"file": (io.BytesIO(b"hello"), "notes.txt")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 400
+
+
+def test_batch_classify_no_file_returns_400(client):
+    resp = client.post("/api/classify/batch", data={}, content_type="multipart/form-data")
+    assert resp.status_code == 400
