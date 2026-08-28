@@ -7,8 +7,12 @@ Endpoints:
 """
 import os
 import sys
+import logging
 from flask import Flask, request, jsonify, send_from_directory
 import joblib
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 sys.path.append(os.path.dirname(__file__))
 from models.llm_classifier import classify_with_llm  # noqa: E402
@@ -80,13 +84,15 @@ def classify():
             result["method"] = "llm"
             return jsonify(result)
         except Exception as e:
+            logger.exception("LLM classification failed (method=llm)")
             return jsonify({"error": f"LLM classification failed: {str(e)}"}), 502
 
     # auto: try LLM, fall back to baseline
     try:
         result = classify_with_llm(ticket_text)
         result["method"] = "llm"
-    except Exception:
+    except Exception as e:
+        logger.exception("LLM classification failed in auto mode, falling back to baseline: %s", e)
         result = classify_with_baseline(ticket_text)
         result["method"] = "baseline"
 
