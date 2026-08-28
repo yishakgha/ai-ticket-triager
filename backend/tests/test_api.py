@@ -126,6 +126,18 @@ def test_batch_classify_valid_csv(client):
     assert all("category" in r for r in body["results"])
 
 
+def test_batch_classify_handles_notepad_bom_encoding(client):
+    # Windows Notepad saves CSVs as "UTF-8 with BOM" by default, which
+    # prepends an invisible byte-order-mark before the first header. Without
+    # handling this, the 'text' column check fails even on a valid file.
+    csv_content = "text\r\nI was charged twice for my subscription\r\nThe app crashes on upload\r\n"
+    bom_bytes = b"\xef\xbb\xbf" + csv_content.encode("utf-8")
+    data = {"file": (io.BytesIO(bom_bytes), "tickets.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 200
+    assert resp.get_json()["count"] == 2
+
+
 def test_batch_classify_missing_text_column_returns_400(client):
     data = {"file": (io.BytesIO(b"foo\nbar\n"), "bad.csv")}
     resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
@@ -141,3 +153,15 @@ def test_batch_classify_rejects_non_csv_file(client):
 def test_batch_classify_no_file_returns_400(client):
     resp = client.post("/api/classify/batch", data={}, content_type="multipart/form-data")
     assert resp.status_code == 400
+
+
+def test_batch_classify_handles_utf8_bom(client):
+    # Windows Notepad and Excel commonly save CSVs with a UTF-8 byte-order-mark
+    # (BOM) prefix, which silently corrupts the first header name (e.g. "text"
+    # becomes "\ufefftext") unless explicitly stripped on read.
+    csv_content = "text\nI was charged twice for my subscription\n"
+    data = {"file": (io.BytesIO(csv_content.encode("utf-8-sig")), "tickets.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["count"] == 1

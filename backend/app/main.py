@@ -154,12 +154,12 @@ def classify_batch():
         return jsonify({"error": "File must be a .csv file."}), 400
 
     try:
-        stream = io.StringIO(file.stream.read().decode("utf-8"), newline=None)
+        stream = io.StringIO(file.stream.read().decode("utf-8-sig"), newline=None)
         reader = csv.DictReader(stream)
     except Exception as e:
         return jsonify({"error": f"Could not parse CSV: {str(e)}"}), 400
 
-    if reader.fieldnames is None or "text" not in reader.fieldnames:
+    if reader.fieldnames is None or "text" not in [f.strip() for f in reader.fieldnames]:
         return jsonify({"error": "CSV must have a 'text' column."}), 400
 
     results = []
