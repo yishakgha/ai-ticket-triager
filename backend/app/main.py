@@ -154,7 +154,20 @@ def classify_batch():
         return jsonify({"error": "File must be a .csv file."}), 400
 
     try:
-        stream = io.StringIO(file.stream.read().decode("utf-8-sig"), newline=None)
+        raw_bytes = file.stream.read()
+        # Try common encodings in order: UTF-8 (with or without BOM), then
+        # UTF-16 (what Windows Notepad sometimes saves as, depending on
+        # locale/version), before giving up.
+        decoded = None
+        for encoding in ("utf-8-sig", "utf-16", "utf-8"):
+            try:
+                decoded = raw_bytes.decode(encoding)
+                break
+            except (UnicodeDecodeError, UnicodeError):
+                continue
+        if decoded is None:
+            return jsonify({"error": "Could not decode file. Please save it as UTF-8 CSV."}), 400
+        stream = io.StringIO(decoded, newline=None)
         reader = csv.DictReader(stream)
     except Exception as e:
         return jsonify({"error": f"Could not parse CSV: {str(e)}"}), 400

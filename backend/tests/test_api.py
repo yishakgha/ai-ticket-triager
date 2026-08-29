@@ -138,6 +138,17 @@ def test_batch_classify_handles_notepad_bom_encoding(client):
     assert resp.get_json()["count"] == 2
 
 
+def test_batch_classify_handles_utf16_encoding(client):
+    # Some Windows locales/versions default Notepad to UTF-16 instead of
+    # UTF-8. The batch endpoint tries multiple encodings before giving up.
+    csv_content = "text\r\nI was charged twice for my subscription\r\nThe app crashes on upload\r\n"
+    utf16_bytes = csv_content.encode("utf-16")
+    data = {"file": (io.BytesIO(utf16_bytes), "tickets.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 200
+    assert resp.get_json()["count"] == 2
+
+
 def test_batch_classify_missing_text_column_returns_400(client):
     data = {"file": (io.BytesIO(b"foo\nbar\n"), "bad.csv")}
     resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
