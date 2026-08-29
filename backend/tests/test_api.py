@@ -176,3 +176,40 @@ def test_batch_classify_handles_utf8_bom(client):
     assert resp.status_code == 200
     body = resp.get_json()
     assert body["count"] == 1
+
+
+def test_batch_classify_skips_blank_lines(client):
+    # Python's csv.DictReader silently skips fully blank lines (no row is
+    # yielded for them at all), so a file with a blank line in the middle
+    # should still classify only the non-blank rows, with no error or gap.
+    csv_content = "text\nI was charged twice for my subscription\n\nThe app crashes on upload\n"
+    data = {"file": (io.BytesIO(csv_content.encode()), "tickets.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["count"] == 2
+    assert all("category" in r for r in body["results"])
+
+
+def test_batch_classify_flags_row_with_empty_text_value(client):
+    # A row where the 'text' column itself is empty (as opposed to a fully
+    # blank line) IS yielded by csv.DictReader, and should be flagged with
+    # an error rather than crashing or silently skipping.
+    csv_content = 'text\n""\nThe app crashes on upload\n'
+    data = {"file": (io.BytesIO(csv_content.encode()), "tickets.csv")}
+    resp = client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    flagged = [r for r in body["results"] if r.get("error")]
+    assert len(flagged) == 1
+
+
+def test_batch_classify_updates_analytics(client):
+    csv_content = "text\nI was charged twice for my subscription\nThe app crashes on upload\n"
+    data = {"file": (io.BytesIO(csv_content.encode()), "tickets.csv")}
+    client.post("/api/classify/batch", data=data, content_type="multipart/form-data")
+
+    resp = client.get("/api/analytics")
+    body = resp.get_json()
+    assert body["total_classified"] >= 2
+    assert body["by_method"].get("baseline", 0) >= 2

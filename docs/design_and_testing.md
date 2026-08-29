@@ -75,15 +75,30 @@ Full classification reports and confusion matrices are produced by
 
 ## 6. Testing
 
-Automated tests (`backend/tests/test_api.py`, run via `pytest`) cover:
+Automated tests (`backend/tests/test_api.py`, run via `pytest`) — 21 tests
+covering:
 - Health check endpoint returns 200
 - Missing/empty ticket text returns 400 with a clear error
 - Oversized ticket text (>5000 chars) returns 400
 - Baseline classification returns the expected category for representative
   billing, technical, and account tickets
+- Baseline classification includes valid confidence scores (0.0–1.0) for
+  both category and priority
 - LLM classification correctly returns 502 when no API key is configured
 - `auto` mode correctly falls back to the baseline model when the LLM path
   is unavailable
+- Batch CSV upload: valid file classifies all rows correctly
+- Batch CSV upload: handles UTF-8-with-BOM and UTF-16 encodings (both
+  produced by Windows Notepad depending on locale/version — this was a real
+  issue hit during manual testing and fixed as a result, see Section 9)
+- Batch CSV upload: rejects a file missing the required `text` column,
+  rejects non-CSV files, rejects a request with no file attached
+- Batch CSV upload: correctly skips fully blank lines and flags rows with
+  an empty `text` value rather than crashing
+- Batch CSV upload: classifications are correctly recorded into the session
+  analytics history
+- Analytics endpoint reflects classifications made via both the single and
+  batch endpoints
 
 These tests run automatically via GitHub Actions CI (`.github/workflows/ci.yml`)
 on every push and pull request to `main`, so regressions are caught before
