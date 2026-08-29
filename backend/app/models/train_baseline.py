@@ -11,6 +11,8 @@ Run from backend/app/models/: python train_baseline.py
 """
 import csv
 import os
+from typing import Any
+
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -21,7 +23,9 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "t
 MODEL_DIR = os.path.dirname(__file__)
 
 
-def load_data():
+def load_data() -> tuple[list[str], list[str], list[str]]:
+    """Load the labeled ticket dataset from data/tickets.csv, returning
+    three parallel lists: ticket texts, category labels, priority labels."""
     texts, categories, priorities = [], [], []
     with open(DATA_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -32,7 +36,11 @@ def load_data():
     return texts, categories, priorities
 
 
-def train_and_eval(texts, labels, label_name):
+def train_and_eval(texts: list[str], labels: list[str], label_name: str) -> float:
+    """Train a TF-IDF + Logistic Regression classifier for one label type
+    (either 'category' or 'priority'), print an evaluation report on a
+    held-out 20% test split, save the fitted model and vectorizer to disk as
+    .joblib files, and return the test-set accuracy."""
     X_train, X_test, y_train, y_test = train_test_split(
         texts, labels, test_size=0.2, random_state=42, stratify=labels
     )

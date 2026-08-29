@@ -10,6 +10,7 @@ model so the app degrades gracefully rather than crashing.
 """
 import os
 import json
+from typing import Any
 
 CATEGORIES = ["billing", "technical", "account", "feature_request", "general_inquiry"]
 PRIORITIES = ["low", "medium", "high", "urgent"]
@@ -23,7 +24,7 @@ Respond ONLY with valid JSON in this exact shape, no other text:
 """
 
 
-def classify_with_llm(ticket_text: str):
+def classify_with_llm(ticket_text: str) -> dict[str, Any]:
     """Calls the Anthropic API to classify a ticket. Raises on failure so the
     caller can decide whether to fall back to the baseline model."""
     api_key = os.environ.get("ANTHROPIC_API_KEY")
