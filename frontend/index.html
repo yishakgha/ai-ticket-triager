@@ -137,6 +137,40 @@
   .bar-fill { height: 100%; background: var(--accent); }
   .bar-count { width: 30px; text-align: right; color: var(--muted); flex-shrink: 0; }
   .empty-state { color: var(--muted); font-size: 0.88rem; margin-top: 10px; }
+
+  .footer {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 6px;
+    vertical-align: -2px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 480px) {
+    body { padding: 20px 12px; }
+    h1 { font-size: 1.3rem; }
+    .card { padding: 16px; }
+    .tabs { gap: 2px; }
+    .tab { padding: 8px 10px; font-size: 0.82rem; }
+    button { width: 100%; margin-left: 0; }
+    .row { flex-direction: column; align-items: stretch; }
+    .row select { width: 100%; }
+    td.text-cell { max-width: 140px; }
+  }
 </style>
 </head>
 <body>
@@ -215,6 +249,12 @@
       <div id="analyticsContent"></div>
     </div>
   </div>
+
+  <div class="footer">
+    <a href="https://github.com/yishakgha/ai-ticket-triager" target="_blank" rel="noopener">GitHub Repo</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/yishakgha/ai-ticket-triager/blob/main/docs/design_and_testing.md" target="_blank" rel="noopener">Design &amp; Testing Doc</a>
+  </div>
 </div>
 
 <script>
@@ -266,7 +306,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
   }
 
   btn.disabled = true;
-  btn.textContent = "Classifying...";
+  btn.innerHTML = '<span class="spinner"></span>Classifying...';
 
   try {
     const resp = await fetch(`${API_BASE}/api/classify`, {
@@ -320,7 +360,7 @@ document.getElementById("batchSubmitBtn").addEventListener("click", async () => 
   formData.append("file", fileInput.files[0]);
 
   btn.disabled = true;
-  btn.textContent = "Classifying...";
+  btn.innerHTML = '<span class="spinner"></span>Classifying...';
 
   try {
     const resp = await fetch(`${API_BASE}/api/classify/batch`, { method: "POST", body: formData });
