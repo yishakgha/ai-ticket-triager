@@ -75,7 +75,7 @@ a free-tier host. See `Procfile` for the production start command
 - Deployed app: https://ai-ticket-triager-scs2.onrender.com
 - Agile task board (Trello): (https://trello.com/invite/b/6a90023311f66877a0eea01b/ATTIaf2073ab22cb806de5b8c65de8da2bd236440DEB/ai-ticket-triager-capstone)
 - Design & testing document: [`docs/design_and_testing.md`](docs/design_and_testing.md)
-- Demo video: [add link]
+- Demo video: (https://drive.google.com/file/d/1NoQHxnVCuf-gM-CLrg1pjIpuTr_mnXcv/view?usp=sharing)
 
 ## Repository access
 
